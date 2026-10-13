@@ -1,0 +1,282 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07080d"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Cut Quest">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icons/icon-180.png"><link rel="icon" href="icons/icon-192.png">
+<title>Cut Quest</title>
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#07080d;--s1:#101218;--s2:#171a22;--ln:#ffffff12;--t:#f4f5f8;--m:#8b90a0;--red:#ff2d55;--grn:#a3ff12;--cy:#14d9ff;--yl:#ffd60a;--pu:#bf5af2;--r:22px;
+--safe-t:env(safe-area-inset-top);--safe-b:env(safe-area-inset-bottom)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--t);font:400 16px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Display","Inter",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+.app{max-width:560px;margin:auto;padding:calc(var(--safe-t) + 14px) 16px calc(var(--safe-b) + 96px)}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.date{color:var(--m);font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+h1{font-size:34px;font-weight:800;letter-spacing:-.03em;margin:2px 0 14px}
+.av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--pu),var(--cy));display:grid;place-items:center;font-weight:800;font-size:15px;position:relative}
+.av i{position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border-radius:50%;border:2px solid var(--bg);background:var(--m)}.av i.on{background:var(--grn)}
+.card{background:var(--s1);border:1px solid var(--ln);border-radius:var(--r);padding:18px;margin-bottom:12px;animation:up .55s cubic-bezier(.2,.8,.2,1) both}
+.card:nth-child(2){animation-delay:.05s}.card:nth-child(3){animation-delay:.1s}.card:nth-child(4){animation-delay:.15s}.card:nth-child(5){animation-delay:.2s}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.h{font-size:13px;font-weight:700;color:var(--m);letter-spacing:.05em;text-transform:uppercase;margin:0 0 12px;display:flex;justify-content:space-between}
+.hero{display:flex;gap:18px;align-items:center}.hero svg{flex:0 0 168px;height:168px}
+.leg{flex:1;display:flex;flex-direction:column;gap:12px}.leg div{font-size:13px;color:var(--m);font-weight:600}
+.leg b{display:block;font-size:22px;font-weight:700;color:var(--t);letter-spacing:-.02em}.leg b small{font-size:13px;color:var(--m);font-weight:600}
+.ring-bg{fill:none;stroke-width:15;opacity:.22}.ring{fill:none;stroke-width:15;stroke-linecap:round;transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)}
+.mini{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}.mini svg{width:100%;max-width:72px}.mini div{font-size:11px;color:var(--m);font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.kpi{background:var(--s2);border-radius:16px;padding:12px}
+.kpi small{font-size:11px;color:var(--m);font-weight:600;text-transform:uppercase;letter-spacing:.04em}.kpi b{display:block;font-size:22px;font-weight:700;letter-spacing:-.02em;margin-top:2px}
+.kpi b em{font-style:normal;font-size:12px;color:var(--m);font-weight:600}
+.lvl{display:flex;align-items:center;gap:14px}.lv{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;font-size:24px;font-weight:800;background:linear-gradient(135deg,#5e2bff,#bf5af2);box-shadow:0 8px 30px #bf5af255}
+.xpb{height:8px;background:var(--s2);border-radius:8px;overflow:hidden;margin-top:8px}.xpb i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5e2bff,var(--pu),var(--cy));border-radius:8px;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.sub{font-size:13px;color:var(--m)}
+.btn{appearance:none;border:0;border-radius:16px;padding:15px 18px;font:700 16px/1 inherit;font-family:inherit;color:#000;background:var(--grn);width:100%;cursor:pointer;transition:transform .12s,filter .2s}
+.btn:active{transform:scale(.96)}.btn.sec{background:var(--s2);color:var(--t);border:1px solid var(--ln)}.btn.sm{padding:10px 14px;font-size:14px;width:auto;border-radius:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.fld{display:grid;grid-template-columns:1fr 1fr;gap:10px}label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:600;color:var(--m)}
+input,select{background:var(--s2);border:1px solid var(--ln);color:var(--t);border-radius:14px;padding:13px;font:600 17px inherit;font-family:inherit;width:100%;outline:none;transition:border .2s}
+input:focus{border-color:var(--grn)}
+.stp{display:flex;align-items:center;background:var(--s2);border:1px solid var(--ln);border-radius:14px}.stp input{border:0;text-align:center;background:none;padding:12px 0}
+.stp button{background:none;border:0;color:var(--grn);font-size:22px;width:44px;height:46px;cursor:pointer}.stp button:active{transform:scale(.85)}
+.tabs{position:fixed;left:0;right:0;bottom:0;padding:8px 10px calc(var(--safe-b) + 8px);background:#07080dcc;backdrop-filter:saturate(180%) blur(22px);-webkit-backdrop-filter:saturate(180%) blur(22px);border-top:1px solid var(--ln);display:flex;justify-content:center;z-index:5}
+.tabs div{display:flex;max-width:560px;width:100%;justify-content:space-around}
+.tab{background:none;border:0;color:var(--m);font:600 10px inherit;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;cursor:pointer;transition:color .2s,transform .15s}
+.tab svg{width:25px;height:25px}.tab.on{color:var(--grn)}.tab:active{transform:scale(.88)}
+.pg{display:none}.pg.on{display:block}
+.badges{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.bd{background:var(--s2);border-radius:18px;padding:14px 6px;text-align:center;font-size:12px;font-weight:600;color:var(--m);transition:transform .2s}
+.bd .e{width:52px;height:52px;margin:0 auto 8px;border-radius:50%;display:grid;place-items:center;font-size:24px;background:#ffffff08;filter:grayscale(1);opacity:.4}
+.bd.on{color:var(--t)}.bd.on .e{filter:none;opacity:1;background:radial-gradient(circle,#ffd60a33,#ffd60a08 70%);box-shadow:0 0 0 2px #ffd60a66,0 0 24px #ffd60a33}
+.bd small{display:block;font-size:10px;color:var(--m);margin-top:2px;font-weight:500}
+.list .it{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--ln)}.list .it:last-child{border:0}
+.list .it b{font-weight:600}.list .it span{color:var(--m);font-size:13px}.chip{font-size:12px;font-weight:700;color:var(--grn);background:#a3ff1218;padding:4px 8px;border-radius:8px}
+.seg{display:flex;background:var(--s2);border-radius:12px;padding:3px;margin-bottom:12px}.seg button{flex:1;background:none;border:0;color:var(--m);font:600 13px inherit;font-family:inherit;padding:8px;border-radius:9px;cursor:pointer}.seg button.on{background:#ffffff1a;color:var(--t)}
+#toast{position:fixed;left:50%;top:calc(var(--safe-t) + 12px);transform:translate(-50%,-140%);background:#1c1f28ee;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--ln);padding:12px 18px;border-radius:999px;font-weight:700;font-size:14px;z-index:20;transition:transform .5s cubic-bezier(.2,1.3,.3,1);white-space:nowrap}
+#toast.show{transform:translate(-50%,0)}
+.burst{position:fixed;pointer-events:none;z-index:19;font-size:22px;animation:burst 1s ease-out forwards}@keyframes burst{to{transform:translate(var(--x),var(--y)) scale(.4);opacity:0}}
+.steps{counter-reset:s;padding:0;margin:0;list-style:none}.steps li{counter-increment:s;position:relative;padding:0 0 14px 38px;font-size:14px;color:#d6d8df}
+.steps li:before{content:counter(s);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;background:var(--s2);color:var(--grn);font-weight:800;font-size:13px;display:grid;place-items:center}
+code{background:var(--s2);padding:2px 6px;border-radius:6px;font-size:12.5px;word-break:break-all;color:var(--cy)}
+pre{background:var(--s2);padding:12px;border-radius:12px;font-size:12px;overflow:auto;color:var(--cy)}
+details summary{cursor:pointer;font-weight:700;padding:4px 0;list-style:none}details summary::after{content:" ›";color:var(--m)}
+.big{font-size:44px;font-weight:800;letter-spacing:-.04em}.big small{font-size:16px;color:var(--m);font-weight:600}
+.delta{font-weight:700;font-size:14px}.delta.dn{color:var(--grn)}.delta.up{color:var(--red)}
+.x{background:none;border:0;color:var(--m);font-size:18px;cursor:pointer}
+</style></head><body>
+<div class="app">
+<div class="top"><div class="date" id="dt"></div><div class="av" id="av">CK<i id="syncdot"></i></div></div>
+
+<section class="pg on" id="p-today"><h1>Summary</h1>
+<div class="card"><div class="h">Activity <span id="hdr-st"></span></div>
+<div class="hero"><svg viewBox="0 0 168 168" id="hero"></svg>
+<div class="leg"><div style="color:var(--red)">Calories<b id="lg-c"></b></div><div style="color:var(--grn)">Protein<b id="lg-p"></b></div><div style="color:var(--cy)">Run<b id="lg-r"></b></div></div></div></div>
+<div class="card"><div class="h">Macros today</div><div class="mini" id="mini"></div></div>
+<div class="card"><div class="kpis" id="kpis"></div></div>
+<div class="card lvl"><div class="lv" id="lv">1</div><div style="flex:1"><b id="lvn">Rookie</b><div class="sub" id="xpt"></div><div class="xpb"><i id="xpb"></i></div></div></div>
+<div class="card"><div class="h">Apple Health · today</div><div class="kpis" id="hk"></div></div>
+</section>
+
+<section class="pg" id="p-trends"><h1>Trends</h1>
+<div class="card"><div class="h">Weight <span id="w-d" class="delta"></span></div><div class="big" id="w-now"></div><div class="sub" id="w-sub"></div>
+<div class="seg" id="rng" style="margin-top:12px"><button data-d="7">W</button><button data-d="30" class="on">M</button><button data-d="90">3M</button><button data-d="9999">All</button></div>
+<div style="height:230px"><canvas id="ch"></canvas></div></div>
+<div class="card"><div class="h">Running</div><div class="kpis" id="runk"></div><div style="height:150px;margin-top:12px"><canvas id="rch"></canvas></div></div>
+<div class="card"><div class="h">History</div><div class="list" id="hist"></div></div>
+</section>
+
+<section class="pg" id="p-log"><h1>Log</h1>
+<div class="card"><div class="h">Day</div><input type="date" id="f-date"></div>
+<div class="card"><div class="h">Body</div><label>Weight (lb)<div class="stp"><button data-s="weight" data-v="-0.2">−</button><input id="f-weight" type="number" step="0.1" inputmode="decimal" placeholder="—"><button data-s="weight" data-v="0.2">+</button></div></label></div>
+<div class="card"><div class="h">Run</div><div class="fld"><label>Miles<input id="f-miles" type="number" step="0.1" inputmode="decimal"></label><label>Pace (mph)<input id="f-mph" type="number" step="0.1" inputmode="decimal"></label></div>
+<div class="row" style="margin-top:10px"><button class="btn sec sm" id="qr">⚡ Usual run</button><button class="btn sec sm" id="qc">Clear</button></div></div>
+<div class="card"><div class="h">Nutrition</div><div class="fld"><label>Calories<input id="f-cal" type="number" inputmode="numeric"></label><label>Protein g<input id="f-protein" type="number" inputmode="numeric"></label>
+<label>Carbs g<input id="f-carbs" type="number" inputmode="numeric"></label><label>Fat g<input id="f-fat" type="number" inputmode="numeric"></label></div></div>
+<button class="btn" id="save">Save · earn XP</button>
+</section>
+
+<section class="pg" id="p-awards"><h1>Awards</h1>
+<div class="card"><div class="kpis" id="awk"></div></div>
+<div class="card"><div class="h">Badges <span id="bcnt"></span></div><div class="badges" id="badges"></div></div>
+<div class="card"><div class="h">How XP works</div><div class="list sub" id="xprules"></div></div>
+</section>
+
+<section class="pg" id="p-set"><h1>Settings</h1>
+<div class="card"><div class="h">Account & sync</div><div id="acct"></div></div>
+<div class="card"><div class="h">Goals</div><div class="fld">
+<label>Goal weight<input id="s-goal" type="number" step="0.5"></label><label>Start weight<input id="s-start" type="number" step="0.1"></label>
+<label>Calories<input id="s-cal" type="number"></label><label>Protein g<input id="s-protein" type="number"></label>
+<label>Carbs g<input id="s-carbs" type="number"></label><label>Fat g<input id="s-fat" type="number"></label>
+<label>Usual run mi<input id="s-rmi" type="number" step="0.1"></label><label>Usual pace mph<input id="s-rmph" type="number" step="0.1"></label></div>
+<button class="btn" id="s-save" style="margin-top:12px">Save goals</button></div>
+<div class="card"><div class="h">Apple Health</div><div id="hk-token"></div>
+<details style="margin-top:10px"><summary>Set up the iOS Shortcut</summary><ol class="steps" style="margin-top:12px">
+<li>Open <b>Shortcuts</b> → <b>+</b> → name it <b>Cut Quest Sync</b>.</li>
+<li>Add <b>Find Health Samples</b>: Type <i>Weight</i>, Start Date <i>is today</i>, Sort <i>Latest First</i>, Limit <i>1</i>. Then <b>Get Details of Health Sample</b> → <i>Value</i>. Long-press the result → <b>Rename</b> to <code>weight</code>.</li>
+<li>Add <b>Find Health Samples</b>: <i>Steps</i>, Start Date <i>is today</i> → <b>Calculate Statistics</b> → <i>Sum</i>. Rename <code>steps</code>.</li>
+<li>Same for <i>Active Energy</i> (Sum) → <code>active_kcal</code>.</li>
+<li><i>Resting Heart Rate</i>, today, latest, limit 1 → Value → <code>resting_hr</code>.</li>
+<li><i>Sleep Analysis</i>, Start Date <i>in the last 1 day</i>, Value <i>is Asleep</i> (or Core/Deep/REM) → <b>Get Details</b> <i>Duration</i> → <b>Calculate Statistics</b> <i>Sum</i> → <b>Calculate</b> ÷ 3600 → <code>sleep_hours</code>.</li>
+<li><b>Find Workouts</b>: Start Date <i>is today</i>, Type <i>Running</i>, limit 5. Add <b>Repeat with Each</b>; inside, add a <b>Dictionary</b> with keys <code>kind</code>=Type, <code>miles</code>=Distance (in mi), <code>minutes</code>=Duration (in min), <code>kcal</code>=Active Energy, <code>start</code>=Start Date (format ISO 8601). After the loop the result is the list → rename <code>workouts</code>.</li>
+<li>Add <b>Dictionary</b> with keys <code>weight</code>, <code>steps</code>, <code>active_kcal</code>, <code>resting_hr</code>, <code>sleep_hours</code> (Number) and <code>workouts</code> (Array) set to the variables above.</li>
+<li>Add <b>Get Contents of URL</b>: URL <code id="ep">(your ingest URL)</code>, Method <b>POST</b>, Headers <code>Authorization</code> = <code>Bearer YOUR_TOKEN</code>, Request Body <b>JSON</b> → File = the Dictionary.</li>
+<li>Optional: <b>Show Notification</b> with the result. Run it once and allow Health access for every type.</li>
+<li>Automation: <b>Automation</b> tab → <b>+</b> → <b>Time of Day</b> → 9:00 PM, Daily → <b>Run Immediately</b> (turn off "Notify When Run") → choose <b>Cut Quest Sync</b>. Add a second 7:30 AM automation so morning weigh-ins sync too.</li></ol>
+<div class="sub">Test from a computer:</div><pre id="curl"></pre></details></div>
+<div class="card"><div class="h">Data</div><div class="row"><button class="btn sec sm" id="exp">Export CSV</button><button class="btn sec sm" onclick="imp.click()">Import CSV</button><button class="btn sec sm" id="seed">Re-seed weights</button></div><input type="file" id="imp" accept=".csv" hidden>
+<div class="sub" style="margin-top:10px">Install: in Safari tap Share → <b>Add to Home Screen</b>.</div></div>
+</section>
+</div>
+
+<nav class="tabs"><div>
+<button class="tab on" data-p="today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/></svg>Summary</button>
+<button class="tab" data-p="trends"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>Trends</button>
+<button class="tab" data-p="log"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Log</button>
+<button class="tab" data-p="awards"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M12 15a6 6 0 100-12 6 6 0 000 12zM8.5 13.5L7 22l5-3 5 3-1.5-8.5"/></svg>Awards</button>
+<button class="tab" data-p="set"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>Settings</button>
+</div></nav>
+<div id="toast"></div>
+
+<script type="module">
+const $=id=>document.getElementById(id),K='cq2',cfg=window.CQ_CONFIG||{};
+const SEED=[['2026-09-21',208],['2026-10-04',207],['2026-10-11',205.8],['2026-10-12',205.8],['2026-10-13',205.4]];
+const DEF={goal_weight:190,start_weight:208,cal_target:2150,protein_target:180,fat_target:65,carbs_target:210,run_miles:4,run_mph:4.7};
+let S=JSON.parse(localStorage.getItem(K)||'null')||{entries:Object.fromEntries(SEED.map(([d,w])=>[d,{date:d,weight:w}])),workouts:[],settings:{...DEF},dirty:[],seeded:false};
+S.settings={...DEF,...S.settings};S.dirty??=[];
+const save=()=>localStorage.setItem(K,JSON.stringify(S));
+const iso=d=>d.toLocaleDateString('en-CA'),today=()=>iso(new Date()),num=v=>v===''||v==null||isNaN(+v)?null:+v;
+const haptic=(p=10)=>{try{navigator.vibrate?.(p)}catch{}};
+// ---------- supabase ----------
+let sb=null,user=null;
+if(cfg.SUPABASE_URL&&cfg.SUPABASE_ANON_KEY){try{const m=await import('https://esm.sh/@supabase/supabase-js@2');sb=m.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY);
+ const {data}=await sb.auth.getSession();user=data.session?.user||null;sb.auth.onAuthStateChange((_e,s)=>{const was=user;user=s?.user||null;if(user&&!was)pull();renderSet()})}catch(e){console.warn('sync unavailable',e)}}
+const eCols=['weight','calories','protein','carbs','fat','steps','active_kcal','resting_hr','sleep_hours'];
+async function pull(){if(!sb||!user)return;try{
+ const [e,w,s]=await Promise.all([sb.from('daily_entries').select('*'),sb.from('workouts').select('*'),sb.from('settings').select('*').maybeSingle()]);
+ if(e.error)throw e.error;
+ if(!e.data.length&&!S.seeded){await push(true)}else{for(const r of e.data){const l=S.entries[r.date]||{date:r.date};eCols.forEach(k=>{if(r[k]!=null)l[k]=+r[k]});S.entries[r.date]=l}}
+ if(w.data)S.workouts=w.data.map(x=>({id:x.id,date:x.date,miles:+x.miles||0,mph:+x.mph||null,minutes:+x.minutes||null,source:x.source,external_id:x.external_id}));
+ if(s.data){for(const k in DEF)if(s.data[k]!=null)S.settings[k]=+s.data[k]}else await sb.from('settings').upsert({user_id:user.id,...S.settings});
+ S.seeded=true;save();render();dot(true)}catch(err){console.warn(err);dot(false)}}
+async function push(all=false){if(!sb||!user)return;try{
+ const dates=all?Object.keys(S.entries):[...new Set(S.dirty)];
+ const rows=dates.map(d=>S.entries[d]).filter(Boolean).map(e=>{const r={user_id:user.id,date:e.date,updated_at:new Date().toISOString()};eCols.forEach(k=>r[k]=e[k]??null);return r});
+ if(rows.length){const {error}=await sb.from('daily_entries').upsert(rows,{onConflict:'user_id,date'});if(error)throw error}
+ const wk=S.workouts.filter(w=>all||dates.includes(w.date));
+ for(const w of wk){if(!w.external_id)w.external_id='app-'+w.date;await sb.from('workouts').upsert({user_id:user.id,date:w.date,kind:'run',miles:w.miles,mph:w.mph,source:w.source||'app',external_id:w.external_id},{onConflict:'user_id,external_id'})}
+ S.dirty=[];save();dot(true)}catch(err){console.warn(err);dot(false)}}
+const dot=ok=>$('syncdot').className=ok?'on':'';
+window.addEventListener('online',()=>push());
+// ---------- model ----------
+const T=()=>({cal:S.settings.cal_target,protein:S.settings.protein_target,carbs:S.settings.carbs_target,fat:S.settings.fat_target});
+const days=()=>Object.values(S.entries).sort((a,b)=>a.date.localeCompare(b.date));
+const runOn=d=>S.workouts.filter(w=>w.date===d);
+const milesOn=d=>runOn(d).reduce((a,w)=>a+(w.miles||0),0);
+function xpDay(e){const t=T(),r=runOn(e.date);let x=0;if(e.weight!=null)x+=10;if(e.calories!=null)x+=10;if(e.protein>=t.protein)x+=25;if(e.calories!=null&&e.calories<=t.cal)x+=20;
+ const m=r.reduce((a,w)=>a+(w.miles||0),0);x+=Math.round(m*10);if(r.some(w=>w.mph>=4.7))x+=10;return x}
+function streak(){const s=new Set(days().filter(e=>e.weight!=null||e.calories!=null).map(e=>e.date).concat(S.workouts.map(w=>w.date)));let c=0,d=new Date();if(!s.has(iso(d)))d.setDate(d.getDate()-1);while(s.has(iso(d))){c++;d.setDate(d.getDate()-1)}return c}
+function best(){const ds=[...new Set(days().map(e=>e.date).concat(S.workouts.map(w=>w.date)))].sort();let b=0,c=0,p=0;for(const d of ds){const t=new Date(d+'T12:00');c=p&&(t-p)/864e5<1.5?c+1:1;b=Math.max(b,c);p=t}return b}
+const LV=['Rookie','Jogger','Pacer','Grinder','Road Warrior','Iron Will','Lean Machine','Elite','Legend'];
+function stats(){const D=days(),W=D.filter(e=>e.weight!=null),cur=W.at(-1)?.weight??S.settings.start_weight,lost=+(S.settings.start_weight-cur).toFixed(1),
+ miles=S.workouts.reduce((a,w)=>a+(w.miles||0),0),xp=D.reduce((a,e)=>a+xpDay(e),0)+S.workouts.filter(w=>!S.entries[w.date]).reduce((a,w)=>a+Math.round((w.miles||0)*10)+(w.mph>=4.7?10:0),0)+Math.max(0,Math.floor(lost))*50,
+ lvl=Math.floor(Math.sqrt(xp/50))+1,t=T();
+ return{D,W,cur,lost,miles,xp,lvl,lo:50*(lvl-1)**2,hi:50*lvl**2,st:streak(),bs:best(),ph:D.filter(e=>e.protein>=t.protein).length,uh:D.filter(e=>e.calories!=null&&e.calories<=t.cal).length,runs:S.workouts.length}}
+function avg7(W,i){const d=new Date(W[i].date),s=W.filter(x=>{const q=(d-new Date(x.date))/864e5;return q>=0&&q<7});return +(s.reduce((a,x)=>a+x.weight,0)/s.length).toFixed(1)}
+// ---------- ui ----------
+function arc(cx,r,p,c,w=15){const C=2*Math.PI*r,pp=Math.max(0,p);const o=pp>1?`<circle class="ring" cx="${cx}" cy="${cx}" r="${r}" stroke="${c}" stroke-width="${w}" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-(pp-1))}" transform="rotate(-90 ${cx} ${cx})" style="filter:drop-shadow(0 0 4px #000)" />`:'';
+ return `<circle class="ring-bg" cx="${cx}" cy="${cx}" r="${r}" stroke="${c}" stroke-width="${w}"/><circle class="ring" cx="${cx}" cy="${cx}" r="${r}" stroke="${c}" stroke-width="${w}" stroke-dasharray="${C}" stroke-dashoffset="${C}" data-o="${C*(1-Math.min(pp,1))}" transform="rotate(-90 ${cx} ${cx})"/>${o}`}
+const animate=()=>requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll('.ring[data-o]').forEach(c=>c.style.strokeDashoffset=c.dataset.o)));
+let prevLvl=null,ch,rch,range=30;
+function render(){const s=stats(),t=T(),td=S.entries[today()]||{},tm=milesOn(today()),rm=S.settings.run_miles;
+ $('dt').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+ const calP=td.calories!=null?td.calories/t.cal:0;
+ $('hero').innerHTML=arc(84,72,calP,'#ff2d55')+arc(84,54,(td.protein||0)/t.protein,'#a3ff12')+arc(84,36,tm/rm,'#14d9ff');
+ $('lg-c').innerHTML=`${td.calories??0}<small>/${t.cal} kcal</small>`;$('lg-p').innerHTML=`${td.protein??0}<small>/${t.protein} g</small>`;$('lg-r').innerHTML=`${+tm.toFixed(2)}<small>/${rm} mi</small>`;
+ $('hdr-st').innerHTML=`🔥 ${s.st} day streak`;
+ $('mini').innerHTML=[['Cal','calories','cal','#ff2d55'],['Protein','protein','protein','#a3ff12'],['Carbs','carbs','carbs','#14d9ff'],['Fat','fat','fat','#ffd60a']].map(([l,k,tk,c])=>{const v=td[k]||0,over=k!=='protein'&&v>t[tk];
+  return `<div><svg viewBox="0 0 72 72">${arc(36,28,v/t[tk],over?'#ff453a':c,8)}<text x="36" y="40" text-anchor="middle" fill="#f4f5f8" font-size="14" font-weight="700">${Math.round(v/t[tk]*100)}%</text></svg><div>${l}</div></div>`}).join('');
+ $('kpis').innerHTML=[['Weight',s.cur,'lb'],['Lost',s.lost,'lb'],['To goal',(s.cur-S.settings.goal_weight).toFixed(1),'lb']].map(([a,b,u])=>`<div class="kpi"><small>${a}</small><b>${b} <em>${u}</em></b></div>`).join('');
+ $('lv').textContent=s.lvl;$('lvn').textContent=`Level ${s.lvl} · ${LV[Math.min(s.lvl-1,LV.length-1)]}`;$('xpt').textContent=`${s.xp.toLocaleString()} XP · ${s.hi-s.xp} to level ${s.lvl+1}`;
+ setTimeout(()=>$('xpb').style.width=((s.xp-s.lo)/(s.hi-s.lo)*100)+'%',50);
+ $('hk').innerHTML=[['Steps',td.steps?.toLocaleString()??'—',''],['Active',td.active_kcal??'—','kcal'],['Rest HR',td.resting_hr??'—','bpm']].map(([a,b,u])=>`<div class="kpi"><small>${a}</small><b>${b} <em>${u}</em></b></div>`).join('')+(td.sleep_hours?`<div class="kpi"><small>Sleep</small><b>${(+td.sleep_hours).toFixed(1)} <em>h</em></b></div>`:'');
+ // trends
+ const W=s.W,last=W.at(-1),wk=W.filter(e=>(new Date(last?.date)-new Date(e.date))/864e5<=7)[0];
+ $('w-now').innerHTML=`${s.cur}<small> lb</small>`;$('w-sub').textContent=`7-day avg ${W.length?avg7(W,W.length-1):'—'} · goal ${S.settings.goal_weight}`;
+ const dd=wk&&last?+(last.weight-wk.weight).toFixed(1):0;$('w-d').textContent=(dd>0?'+':'')+dd+' lb / wk';$('w-d').className='delta '+(dd<=0?'dn':'up');
+ drawW(W);
+ const rs=[...S.workouts].sort((a,b)=>a.date.localeCompare(b.date));
+ $('runk').innerHTML=[['Total',s.miles.toFixed(1),'mi'],['Runs',s.runs,''],['Avg pace',rs.length?(rs.reduce((a,w)=>a+(w.mph||0),0)/rs.filter(w=>w.mph).length||0).toFixed(1):'—','mph']].map(([a,b,u])=>`<div class="kpi"><small>${a}</small><b>${b} <em>${u}</em></b></div>`).join('');
+ drawR(rs);
+ $('hist').innerHTML=[...s.D].reverse().slice(0,40).map(e=>`<div class="it"><div><b>${new Date(e.date+'T12:00').toLocaleDateString(undefined,{month:'short',day:'numeric'})}</b><br><span>${[e.weight&&e.weight+' lb',milesOn(e.date)&&milesOn(e.date)+' mi',e.calories&&e.calories+' kcal',e.protein&&e.protein+'g P'].filter(Boolean).join(' · ')||'—'}</span></div><div class="row" style="align-items:center"><span class="chip">+${xpDay(e)} XP</span><button class="x" data-del="${e.date}">×</button></div></div>`).join('');
+ // awards
+ const B=[['🎬','First Log',s.D.length>=1,'Log anything'],['🔥','On Fire',s.bs>=3,'3-day streak'],['📅','Week Warrior',s.bs>=7,'7-day streak'],['🗓️','Iron Habit',s.bs>=30,'30-day streak'],
+ ['🪶','Lighter',s.lost>=5,'5 lb lost'],['💪','Double Digits',s.lost>=10,'10 lb lost'],['🏆','Transformation',s.lost>=15,'15 lb lost'],['🏁','Sub-200',s.cur<200,'Under 200 lb'],['🎯','Goal!',s.cur<=S.settings.goal_weight,'Hit goal weight'],
+ ['👟','First Run',s.runs>0,'Log a run'],['🛣️','Marathoner',s.miles>=26.2,'26.2 total mi'],['💯','Century',s.miles>=100,'100 total mi'],['🚀','Ultra',s.miles>=250,'250 total mi'],
+ ['🥩','Protein Pro',s.ph>=7,'180 g × 7 days'],['🧊','Disciplined',s.uh>=7,'Under cal × 7'],['⭐','Level 5',s.lvl>=5,'Reach level 5'],['👑','Level 10',s.lvl>=10,'Reach level 10'],['❤️','Health Linked',s.D.some(e=>e.steps),'Sync Apple Health']];
+ $('badges').innerHTML=B.map(([e,n,on,d])=>`<div class="bd ${on?'on':''}"><div class="e">${e}</div>${n}<small>${d}</small></div>`).join('');
+ $('bcnt').textContent=`${B.filter(b=>b[2]).length}/${B.length}`;
+ $('awk').innerHTML=[['Level',s.lvl,''],['XP',s.xp.toLocaleString(),''],['Best streak',s.bs,'d']].map(([a,b,u])=>`<div class="kpi"><small>${a}</small><b>${b} <em>${u}</em></b></div>`).join('');
+ $('xprules').innerHTML=[['Log weight','+10'],['Log calories','+10'],[`Hit ${t.protein} g protein`,'+25'],[`Stay ≤ ${t.cal} kcal`,'+20'],['Every mile run','+10'],['Run ≥ 4.7 mph','+10'],['Every lb lost','+50']].map(([a,b])=>`<div class="it"><b>${a}</b><span class="chip">${b}</span></div>`).join('');
+ animate();if(prevLvl&&s.lvl>prevLvl){toast(`🎉 Level up! Level ${s.lvl}`);confetti()}prevLvl=s.lvl}
+const gopt=()=>({responsive:true,maintainAspectRatio:false,animation:{duration:900,easing:'easeOutQuart'},interaction:{mode:'index',intersect:false},
+ plugins:{legend:{display:false},tooltip:{backgroundColor:'#1c1f28',borderColor:'#ffffff22',borderWidth:1,padding:10,cornerRadius:10}},
+ scales:{x:{type:'category',ticks:{color:'#8b90a0',maxTicksLimit:5,font:{size:11}},grid:{display:false},border:{display:false}},y:{ticks:{color:'#8b90a0',font:{size:11},maxTicksLimit:5},grid:{color:'#ffffff0d'},border:{display:false}}}});
+function drawW(Wall){if(!window.Chart)return;const cut=new Date();cut.setDate(cut.getDate()-range);let W=Wall.filter(e=>new Date(e.date)>=cut);if(W.length<2)W=Wall.slice(-Math.max(2,W.length));
+ const idx=W.map(e=>Wall.indexOf(e)),L=W.map(e=>new Date(e.date+'T12:00').toLocaleDateString(undefined,{month:'short',day:'numeric'}));
+ const ctx=$('ch').getContext('2d'),g=ctx.createLinearGradient(0,0,0,230);g.addColorStop(0,'#14d9ff55');g.addColorStop(1,'#14d9ff00');
+ const ys=W.map(e=>e.weight);ch?.destroy();ch=new Chart(ctx,{type:'line',data:{labels:L,datasets:[
+  {label:'Weight',data:ys,borderColor:'#14d9ff',backgroundColor:g,fill:true,tension:.35,pointRadius:3,pointBackgroundColor:'#14d9ff',borderWidth:2.5},
+  {label:'7-day avg',data:idx.map(i=>avg7(Wall,i)),borderColor:'#bf5af2',borderDash:[6,5],tension:.35,pointRadius:0,borderWidth:2},
+  {label:'Goal',data:L.map(()=>S.settings.goal_weight),borderColor:'#a3ff12aa',pointRadius:0,borderWidth:1.5,borderDash:[2,4]}]},
+  options:{...gopt(),scales:{...gopt().scales,y:{...gopt().scales.y,suggestedMin:S.settings.goal_weight-1,suggestedMax:Math.max(...ys)+1}}}})}
+function drawR(rs){if(!window.Chart)return;rch?.destroy();const r=rs.slice(-14);rch=new Chart($('rch'),{type:'bar',data:{labels:r.map(w=>w.date.slice(5)),datasets:[{data:r.map(w=>w.miles),backgroundColor:'#14d9ff',borderRadius:6,maxBarThickness:22}]},options:gopt()})}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');haptic([10,40,10]);clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200)}
+function confetti(x=innerWidth/2,y=innerHeight/2.5){for(let i=0;i<18;i++){const e=document.createElement('div');e.className='burst';e.textContent=['✨','⭐','🔥','💚'][i%4];e.style.left=x+'px';e.style.top=y+'px';
+ const a=Math.random()*6.28,d=80+Math.random()*120;e.style.setProperty('--x',Math.cos(a)*d+'px');e.style.setProperty('--y',Math.sin(a)*d+'px');document.body.append(e);setTimeout(()=>e.remove(),1000)}}
+// nav
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{haptic(8);document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.pg').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.p));
+ document.querySelectorAll('.pg.on .card').forEach(c=>{c.style.animation='none';c.offsetHeight;c.style.animation=''});scrollTo(0,0);render();if(b.dataset.p==='set')renderSet()});
+$('rng').onclick=e=>{const b=e.target.closest('button');if(!b)return;haptic(6);range=+b.dataset.d;[...$('rng').children].forEach(x=>x.classList.toggle('on',x===b));drawW(stats().W)};
+// log form
+const FF=['weight','miles','mph','cal','protein','carbs','fat'];
+function loadDay(){const d=$('f-date').value,e=S.entries[d]||{},r=runOn(d)[0];$('f-weight').value=e.weight??'';$('f-cal').value=e.calories??'';['protein','carbs','fat'].forEach(k=>$('f-'+k).value=e[k]??'');$('f-miles').value=r?.miles??'';$('f-mph').value=r?.mph??''}
+$('f-date').value=today();$('f-date').onchange=loadDay;loadDay();
+document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{haptic(5);const i=$('f-'+b.dataset.s);i.value=((+i.value||stats().cur)+ +b.dataset.v).toFixed(1)});
+$('qr').onclick=()=>{haptic(10);$('f-miles').value=S.settings.run_miles;$('f-mph').value=S.settings.run_mph};$('qc').onclick=()=>{$('f-miles').value=$('f-mph').value=''};
+$('save').onclick=e=>{const d=$('f-date').value;if(!d)return;const before=stats().xp,ent={...(S.entries[d]||{}),date:d};
+ const m={weight:'f-weight',calories:'f-cal',protein:'f-protein',carbs:'f-carbs',fat:'f-fat'};for(const k in m){const v=num($(m[k]).value);if(v==null)delete ent[k];else ent[k]=v}
+ S.entries[d]=ent;const mi=num($('f-miles').value),mph=num($('f-mph').value);const ex=S.workouts.find(w=>w.date===d&&(w.source||'app')==='app');
+ if(mi){if(ex){ex.miles=mi;ex.mph=mph}else S.workouts.push({date:d,miles:mi,mph,source:'app',external_id:'app-'+d})}else if(ex&&!mi)S.workouts=S.workouts.filter(w=>w!==ex);
+ S.dirty.push(d);save();push();const gain=stats().xp-before;toast(gain>0?`✅ Saved · +${gain} XP`:'✅ Saved');const r=e.target.getBoundingClientRect();if(gain>0)confetti(r.left+r.width/2,r.top);render()};
+$('hist').onclick=e=>{const d=e.target.dataset.del;if(d&&confirm('Delete '+d+'?')){delete S.entries[d];S.workouts=S.workouts.filter(w=>w.date!==d);save();
+ if(sb&&user){sb.from('daily_entries').delete().eq('date',d);sb.from('workouts').delete().eq('date',d)}render()}};
+// settings
+const SM={goal:'goal_weight',start:'start_weight',cal:'cal_target',protein:'protein_target',carbs:'carbs_target',fat:'fat_target',rmi:'run_miles',rmph:'run_mph'};
+function renderSet(){for(const k in SM)$('s-'+k).value=S.settings[SM[k]];
+ const ep=cfg.SUPABASE_URL?cfg.SUPABASE_URL+'/functions/v1/ingest':'https://<project>.supabase.co/functions/v1/ingest';$('ep').textContent=ep;
+ $('curl').textContent=`curl -X POST ${ep} \\\n -H "Authorization: Bearer YOUR_TOKEN" \\\n -H "Content-Type: application/json" \\\n -d '{"weight":205.4,"steps":9000,"active_kcal":650,"resting_hr":58,"sleep_hours":7.2,"workouts":[{"kind":"running","miles":4,"minutes":51}]}'`;
+ if(!sb){$('acct').innerHTML=`<div class="sub">Local-only mode. Data is saved on this device. Cloud sync turns on once the Supabase project is connected in <code>config.js</code>.</div>`;$('hk-token').innerHTML='<div class="sub">Connect cloud sync first to get your personal Health token.</div>';return}
+ if(!user){$('acct').innerHTML=`<label>Email<input id="em" type="email" autocomplete="email" placeholder="you@email.com"></label><button class="btn" id="ml" style="margin-top:10px">Send magic link</button>`;
+  $('ml').onclick=async()=>{const {error}=await sb.auth.signInWithOtp({email:$('em').value,options:{emailRedirectTo:location.href.split('#')[0]}});toast(error?error.message:'📬 Check your email')};
+  $('hk-token').innerHTML='<div class="sub">Sign in to generate your token.</div>';return}
+ $('acct').innerHTML=`<div class="it" style="display:flex;justify-content:space-between;align-items:center"><div><b>${user.email}</b><div class="sub">Synced across devices</div></div><button class="btn sec sm" id="so">Sign out</button></div>`;$('so').onclick=()=>sb.auth.signOut();
+ $('hk-token').innerHTML=`<div class="sub">Your token authenticates the Shortcut. It's shown once, so copy it into the Shortcut header.</div><button class="btn sec sm" id="gt" style="margin-top:10px">Generate new token</button><pre id="tk" hidden></pre>`;
+ $('gt').onclick=async()=>{const tok=[...crypto.getRandomValues(new Uint8Array(24))].map(b=>b.toString(16).padStart(2,'0')).join('');
+  const h=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(tok)))].map(b=>b.toString(16).padStart(2,'0')).join('');
+  const {error}=await sb.from('api_tokens').upsert({user_id:user.id,token_hash:h});if(error)return toast(error.message);$('tk').hidden=false;$('tk').textContent=tok;navigator.clipboard?.writeText(tok);toast('🔑 Token copied')}}
+$('s-save').onclick=async()=>{for(const k in SM){const v=num($('s-'+k).value);if(v!=null)S.settings[SM[k]]=v}save();toast('🎯 Goals saved');render();if(sb&&user)await sb.from('settings').upsert({user_id:user.id,...S.settings,updated_at:new Date().toISOString()})};
+$('seed').onclick=()=>{SEED.forEach(([d,w])=>{S.entries[d]={...(S.entries[d]||{date:d}),weight:w};S.dirty.push(d)});save();push();render();toast('Weights restored')};
+$('exp').onclick=()=>{const h='date,weight,calories,protein,carbs,fat,run_miles,run_mph,steps,active_kcal,resting_hr,sleep_hours';
+ const c=[h].concat(days().map(e=>{const r=runOn(e.date)[0]||{};return [e.date,e.weight,e.calories,e.protein,e.carbs,e.fat,r.miles,r.mph,e.steps,e.active_kcal,e.resting_hr,e.sleep_hours].map(v=>v??'').join(',')})).join('\n');
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:'text/csv'}));a.download='cutquest-'+today()+'.csv';a.click()};
+$('imp').onchange=async()=>{const t=await $('imp').files[0].text(),[h,...rows]=t.trim().split(/\r?\n/),H=h.split(',').map(x=>x.trim().replace('weight_lb','weight'));let n=0;
+ for(const l of rows){const v=l.split(','),o={};H.forEach((k,i)=>o[k]=v[i]?.trim());if(!/^\d{4}-\d\d-\d\d$/.test(o.date||''))continue;const e={...(S.entries[o.date]||{}),date:o.date};
+  ['weight','calories','protein','carbs','fat','steps','active_kcal','resting_hr','sleep_hours'].forEach(k=>{const x=num(o[k]);if(x!=null)e[k]=x});S.entries[o.date]=e;
+  if(num(o.run_miles)){S.workouts=S.workouts.filter(w=>!(w.date===o.date&&w.source==='app'));S.workouts.push({date:o.date,miles:+o.run_miles,mph:num(o.run_mph),source:'app',external_id:'app-'+o.date})}S.dirty.push(o.date);n++}
+ save();push();render();toast(`Imported ${n} days`)};
+document.addEventListener('pointerdown',e=>{if(e.target.closest('button'))haptic(6)});
+if('serviceWorker' in navigator&&location.protocol!=='file:')navigator.serviceWorker.register('sw.js');
+render();renderSet();if(user)pull();
+window.__cq={S,render};
+</script></body></html>
